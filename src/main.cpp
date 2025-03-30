@@ -3,8 +3,8 @@
 using namespace std;
 
 int main (void){
-    const int width = 480;
-    const int height = 360;
+    const int width = 4;
+    const int height = 4;
     Image image(width, height);
 
     for ( int y = 0; y < height ; y++)
