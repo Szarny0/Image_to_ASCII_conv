@@ -3,7 +3,7 @@
 using namespace std;
 
 int main (void){
-    const int width = 480;
+    const int width = 17;
     const int height = 480;
     Image image(width, height);
 
@@ -14,7 +14,7 @@ int main (void){
             image.SetColor( Color( (float)x / (float)width, 1.0f - ((float)x / (float)width), (float)y / (float)height ), x, y );
         }    
     }
-   image.Export("image480x480.bmp"); 
+   image.Export("image.bmp"); 
 }
 
 

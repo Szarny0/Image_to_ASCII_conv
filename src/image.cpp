@@ -42,7 +42,7 @@ void Image::SetColor(const Color& color, int x, int y)
     m_colors[y * m_width + x].b = color.b;
 
 }
-void Image::Export(const char* path)
+void Image::Export(const char* path) const
 {
     std::ofstream f;
     f.open(path, std::ios::out | std::ios::binary);
@@ -78,7 +78,7 @@ void Image::Export(const char* path)
     fileHeader[12] = 0;
     fileHeader[13] = 0;
 
-    unsigned char informationHeader [informationHeaderSize]; //14:26
+    unsigned char informationHeader [informationHeaderSize]; 
     // Header size
     informationHeader[0] = informationHeaderSize;
     informationHeader[1] = 0;
@@ -90,10 +90,10 @@ void Image::Export(const char* path)
     informationHeader[6] = m_width >> 16;
     informationHeader[7] = m_width >> 24;
     // Image height
-    informationHeader[8] = m_width;
-    informationHeader[9] = m_width >> 8;
-    informationHeader[10] = m_width >> 16;
-    informationHeader[11] = m_width >> 24;
+    informationHeader[8] = m_height;
+    informationHeader[9] = m_height >> 8;
+    informationHeader[10] = m_height >> 16;
+    informationHeader[11] = m_height >> 24;
     // Planes
     informationHeader[12] = 1;
     informationHeader[13] = 0;
