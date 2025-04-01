@@ -19,7 +19,7 @@ int main (void){
    image.Export("image.bmp"); 
 */   
     Image copy(0, 0);
-    const string ASCIICHARS = "                           `^”,:;Il!i~+_-?][}{1)(|/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$";
+    const string ASCIICHARS = "                      `^”,:;Il!i~+_-?][}{1)(|/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$";
     int strLen = ASCIICHARS.size();
     copy.Read("A.bmp");
     std::ofstream f;
