@@ -42,7 +42,7 @@ void Image::SetColor(const Color& color, int x, int y)
     m_colors[y * m_width + x].b = color.b;
 
 }
-void Image::Export(const char* path)
+void Image::Export(const char* path) const
 {
     std::ofstream f;
     f.open(path, std::ios::out | std::ios::binary);
@@ -78,7 +78,7 @@ void Image::Export(const char* path)
     fileHeader[12] = 0;
     fileHeader[13] = 0;
 
-    unsigned char informationHeader [informationHeaderSize]; //14:26
+    unsigned char informationHeader [informationHeaderSize]; 
     // Header size
     informationHeader[0] = informationHeaderSize;
     informationHeader[1] = 0;
@@ -90,10 +90,10 @@ void Image::Export(const char* path)
     informationHeader[6] = m_width >> 16;
     informationHeader[7] = m_width >> 24;
     // Image height
-    informationHeader[8] = m_width;
-    informationHeader[9] = m_width >> 8;
-    informationHeader[10] = m_width >> 16;
-    informationHeader[11] = m_width >> 24;
+    informationHeader[8] = m_height;
+    informationHeader[9] = m_height >> 8;
+    informationHeader[10] = m_height >> 16;
+    informationHeader[11] = m_height >> 24;
     // Planes
     informationHeader[12] = 1;
     informationHeader[13] = 0;
@@ -155,3 +155,54 @@ void Image::Export(const char* path)
 }
 
 
+void Image::Read(const char * path)
+{
+    std::ifstream f;
+    f.open(path, std::ios::in | std::ios::binary);
+
+    if (!f.is_open())
+    {
+    std::cout << "File cannot be open" << std::endl;
+    return;
+    }
+    const int fileHeaderSize = 14;
+    const int informationHeaderSize = 40;
+
+    unsigned char fileHeader[fileHeaderSize];
+    f.read(reinterpret_cast<char*>(fileHeader), fileHeaderSize);
+
+    if (fileHeader[0] != 'B' || fileHeader[1] != 'M')
+    {
+        std::cout << "It's not a bitmap image" << std::endl;
+        f.close();
+        return;
+    }
+
+    unsigned char informationHeader[informationHeaderSize];
+    f.read(reinterpret_cast<char*>(informationHeader), informationHeaderSize);
+
+    int fileSize = fileHeader[2] + (fileHeader[3] << 8) + (fileHeader[4] << 16) + (fileHeader[5] << 24);
+    m_width = informationHeader[4] + (informationHeader[5] << 8) + (informationHeader[6] << 16) + (informationHeader[7] << 24);
+    m_height = informationHeader[8] + (informationHeader[9] << 8) + (informationHeader[10] << 16) + (informationHeader[11] << 24);
+
+    m_colors.resize(m_width * m_height);
+    const int paddingAmount = ((4 - (m_width * 3) % 4 ) % 4);
+
+    for (int y = 0; y < m_height; y++)
+    {
+        for (int x = 0; x < m_width; x++)
+        {
+        unsigned char color[3];
+        f.read(reinterpret_cast<char*>(color),  3); 
+
+        m_colors[y * m_width + x].r = static_cast<float>(color[2]) / 255.0f;
+        m_colors[y * m_width + x].g = static_cast<float>(color[1]) / 255.0f;
+        m_colors[y * m_width + x].b = static_cast<float>(color[0]) / 255.0f;
+        }
+
+        f.ignore(paddingAmount);
+    }
+    f.close();
+
+    std::cout << "File read" << std::endl;
+}
