@@ -3,7 +3,7 @@
 using namespace std;
 
 int main (void){
-    const int width = 17;
+    const int width = 640;
     const int height = 480;
     Image image(width, height);
 
@@ -15,7 +15,11 @@ int main (void){
         }    
     }
    image.Export("image.bmp"); 
+   
+   Image copy(0, 0);
+
+   copy.Read("image.bmp");
+
+   copy.Export("copy.bmp");
 }
-
-
 
